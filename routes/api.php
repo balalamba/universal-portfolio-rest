@@ -43,3 +43,23 @@ Route::get('/admin/users',[
 	'uses' => 'adminController@allUsers',
 	'middleware' => 'auth.jwt'
 ]);
+
+// Entrust + JWT
+// Route to create a new role
+Route::post('role', 'JwtAuthenticateController@createRole');
+// Route to create a new permission
+Route::post('permission', 'JwtAuthenticateController@createPermission');
+// Route to assign role to user
+Route::post('assign-role', 'JwtAuthenticateController@assignRole');
+// Route to attache permission to a role
+Route::post('attach-permission', 'JwtAuthenticateController@attachPermission');
+
+// API route group that we need to protect
+Route::group(['prefix' => 'admin', 'middleware' => ['ability:admin,create-users']], function()
+{
+    // Protected route
+    Route::get('users', 'JwtAuthenticateController@getAllUsers');
+});
+
+// Authentication route
+Route::post('authenticate', 'JwtAuthenticateController@authenticate');
